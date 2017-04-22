@@ -1,0 +1,414 @@
+﻿@{
+    ViewBag.Title = "ForecastChart";
+    ViewBag.Nav = "<li><a href='#'><i class='fa  fa-chevron-circle-right fa-fw'></i> Trang biểu đồ dự đoán</a></li>";
+}
+@{
+    Layout = "~/Views/Shared/ForecastChartLayout.cshtml";
+}
+<script src="../../Content/themes/TaxiForecast/API/highcharts/highcharts.js" type="text/javascript"></script>
+<script src="../../Content/themes/TaxiForecast/API/highcharts/exporting.js" type="text/javascript"></script>
+<script src="../../Content/themes/TaxiForecast/API/highcharts/drilldown.js" type="text/javascript"></script>
+<script src="../../Content/themes/TaxiForecast/js/jquery.min.js" type="text/javascript"></script>
+<!--Panel top-->
+<div class="row">
+    <div class="col-lg-2">
+        <select id="taxiSelection" class="form-control">
+            <option value="">Chọn xe</option>
+            <option value="../../Data/output1.json">Chọn xe 1</option>
+            <option value="../../Data/output2.json">Chọn xe 2</option>
+            <option value="../../Data/output3.json">Chọn xe 3</option>
+            <option value="../../Data/output1.json">Chọn xe 4</option>
+            <option value="../../Data/output5.json">Chọn xe 5</option>
+        </select>
+        <br />
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-thumbs-o-up fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge" id = "safeTotalTime">26 (s)</div>
+                        <div>MỨC AN TOÀN</div>
+                    </div>
+                </div>
+            </div>
+            <a href="#container">
+                <div class="panel-footer">
+                    <span class="pull-left">Chi tiết</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-green">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-flag-o fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge" id = "acceptableTotalTime">12</div>
+                        <div>MỨC CHẤP NHẬN</div>
+                    </div>
+                </div>
+            </div>
+            <a href="#container">
+                <div class="panel-footer">
+                    <span class="pull-left">Chi tiết</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-yellow">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-bullhorn fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge" id = "alarmTotalTime">124</div>
+                        <div>MỨC CẢNH BÁO</div>
+                    </div>
+                </div>
+            </div>
+            <a href="#container">
+                <div class="panel-footer">
+                    <span class="pull-left">Chi tiết</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-red">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-hand-o-down fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge" id = "dangerTotalTime">13</div>
+                        <div>MỨC NGUY HIỂM</div>
+                    </div>
+                </div>
+            </div>
+            <a href="#container">
+                <div class="panel-footer">
+                    <span class="pull-left">Chi tiết</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+<!--//Panel top-->
+<!--Biểu đồ phần trăm-->
+<div class ="row">
+    <div class="col-lg-12">
+       <div class="panel panel-default">
+           <div class="panel-heading">Biểu đồ phần trăm</div>
+           <div class="panel-body">
+                <div id="chartCircle" style="min-width: 310px; height: 300px; margin: 0 auto"></div>                        
+           </div> 
+       </div>                    
+    </div>                           
+</div>
+<!--//Biểu đồ phần trăm-->
+<div class="row">
+    <div class="col-xs-2 .col-sm-3">
+        <div class="list-group">
+            <a href="#" class="list-group-item">
+                <i class="fa fa-clock-o fa-fw"></i> TG.
+                    <span class="pull-right text-muted small"><em id="timeTotal">473459</em>
+                    </span>
+            </a>                    
+        </div>
+    </div>
+    <div class="col-xs-2 .col-sm-3">
+        <div class="list-group">
+            <a href="#" class="list-group-item">
+                <i class="fa fa-comment fa-fw"></i> Km
+                    <span class="pull-right text-muted small"><em id ="kmTotal">473459</em>
+                    </span>
+            </a>                    
+        </div>
+    </div>
+    <div class="col-xs-2 .col-sm-3">
+        <div class="list-group">
+            <a href="#" class="list-group-item">
+                <i class="fa fa-mail-reply fa-fw"></i> Rẽ trái
+                    <span class="pull-right text-muted small"><em id = "leftTurns">4234</em>
+                    </span>
+            </a>                    
+        </div>
+    </div>
+    <div class="col-xs-2 .col-sm-3">
+        <div class="list-group">
+            <a href="#" class="list-group-item">
+                <i class="fa  fa-mail-forward fa-fw"></i> Rẽ phải
+                    <span class="pull-right text-muted small"><em id="rightTurns">43453</em>
+                    </span>
+            </a>                    
+        </div>
+    </div>
+    <div class="col-xs-2 .col-sm-3">
+        <div class="list-group">
+            <a href="#" class="list-group-item">
+                <i class="fa  fa-stop-circle fa-fw"></i> Phanh
+                    <span class="pull-right text-muted small"><em id="brakes">4234</em>
+                    </span>
+            </a>                    
+        </div>
+    </div>
+    <div class="col-xs-2 .col-sm-3">
+        <div class="list-group">
+            <a href="#" class="list-group-item">
+                <i class="fa  fa-comment fa-fw"></i> Gia tốc
+                    <span class="pull-right text-muted small"><em id="accelerations">43453</em>
+                    </span>
+            </a>                    
+        </div>
+    </div>
+</div>
+<h4 class="page-header" style="margin: 0px 0 0px;"></h4>                                 
+<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+<!--Khai báo biến toàn cục-->
+<script type="text/javascript">
+    var dataSafe, dataAcceptable, dataAlarm, dataDanger;
+    var totalTimeCheck;
+    var safeTotalTime, acceptableTotalTime, alarmTotalTime, dangerTotalTime;
+    var JsonData;
+    var kmTotal,length, leftTurns, rightTurns, brakes, accelerations;
+</script>
+<!--//Khai báo biến toàn cục-->
+<!--Hàm vẽ biểu đồ phần trăm-->
+<script type="text/javascript">
+    function drawCircleChart(o,a,b,c,d) {
+        Highcharts.chart('chartCircle', {
+            chart: {
+                type: 'pie'
+            },
+            title: {
+                text: ''
+            },
+            subtitle: {
+                text: ''
+            },
+            plotOptions: {
+                series: {
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.name}: {point.y:.1f}%'
+                    }
+                }
+            },
+
+            tooltip: {
+                headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b><br/>'
+            },
+            series: [{
+                name: 'Brands',
+                colorByPoint: true,
+                data: [{
+                    name: 'MỨC AN TOÀN',
+                    y: (a / o) * 100,
+                    drilldown: 'MỨC AN TOÀN'
+                }, {
+                    name: 'MỨC CHẤP NHẬN',
+                    y: (b / o) * 100,
+                    drilldown: 'MỨC CHẤP NHẬN'
+                }, {
+                    name: 'MỨC CẢNH BÁO',
+                    y: (c / o) * 100,
+                    drilldown: 'MỨC CẢNH BÁO'
+                }, {
+                    name: 'MỨC NGUY HIỂM',
+                    y:(d / o) * 100,
+                    drilldown: 'MỨC NGUY HIỂM'
+                }]
+            }],
+            drilldown: {
+                series: [{
+                    name: 'MỨC AN TOÀN',
+                    id: 'MỨC AN TOÀN',
+                    data: [
+                ['Tốc độ nhỏ hơn 40 km/h', (dataSafe[0] / a) * 100],
+                ['Tốc độ 40 ~ 70 km/h', (dataAcceptable[0] / a) * 100],
+                ['Tốc độ 70 ~ 10 km/h', (dataAlarm[0] / a) * 100],
+                ['Tốc độ lớn hơn 100 km/h', (dataDanger[0] / a )*100]
+            ]
+                }, {
+                    name: 'MỨC CHẤP NHẬN',
+                    id: 'MỨC CHẤP NHẬN',
+                    data: [
+                ['Tốc độ nhỏ hơn 40 km/h', (dataSafe[1] / b) * 100],
+                ['Tốc độ 40 ~ 70 km/h', (dataAcceptable[1] / b) * 100],
+                ['Tốc độ 70 ~ 10 km/h', (dataAlarm[1] / b) * 100],
+                ['Tốc độ lớn hơn 100 km/h', (dataDanger[1] / b) * 100]
+            ]
+                }, {
+                    name: 'MỨC CẢNH BÁO',
+                    id: 'MỨC CẢNH BÁO',
+                    data: [
+                ['Tốc độ nhỏ hơn 40 km/h', (dataSafe[2] / c) * 100],
+                ['Tốc độ 40 ~ 70 km/h', (dataAcceptable[2] / c) * 100],
+                ['Tốc độ 70 ~ 10 km/h', (dataAlarm[2] / c) * 100],
+                ['Tốc độ lớn hơn 100 km/h', (dataDanger[2] / c) * 100]
+            ]
+                }, {
+                    name: 'MỨC NGUY HIỂM',
+                    id: 'MỨC NGUY HIỂM',
+                    data: [
+                ['Tốc độ nhỏ hơn 40 km/h', (dataSafe[3] / d) * 100],
+                ['Tốc độ 40 ~ 70 km/h', (dataAcceptable[3] / d) * 100],
+                ['Tốc độ 70 ~ 10 km/h', (dataAlarm[3] / d) * 100],
+                ['Tốc độ lớn hơn 100 km/h', (dataDanger[3] / d) * 100]
+            ]
+                }]
+            }
+        });
+    }
+
+</script>
+<!--//Hàm vẽ biểu đồ phần trăm-->
+<!--Hàm vẽ biểu đồ phần trăm-->
+<script type="text/javascript">
+   function drawColumChart() {
+        Highcharts.chart('container', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Biểu đồ dự đoán cảnh báo lái xe'
+            },
+            subtitle: {
+                text: 'Nguồn: HaUI'
+            },
+            xAxis: {
+                categories: [
+                    'MỨC AN TOÀN',
+                    'MỨC CHẤP NHẬN ĐƯỢC',
+                    'MỨC CẢNH BẢO',
+                    'MỨC NGUY HIỂM'
+                ],
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                max: totalTimeCheck,
+                plotLines: [{
+                    value: totalTimeCheck,
+                    color: 'black',
+                    width:1,
+                    zIndex: 4,
+                    label: { text: 'Tổng thời gian kiểm tra: '+totalTimeCheck+' s' }
+                }],
+                title: {
+                    text: 'Tổng thời gian (s)'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:12px;font-weight:bold;padding-left:0px;">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+            '<td style="padding:0"><b>{point.y:.1f} s</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [{
+                name: 'Tốc độ nhỏ hơn 40km/h',
+                data: dataSafe
+
+            }, {
+                name: 'Tốc độ 40 ~ 70 km/h',
+                data: dataAcceptable
+
+            }, {
+                name: 'Tốc độ 70 ~ 100 km/h',
+                data: dataAlarm
+
+            }, {
+                name: 'Tốc độ lớn hơn 100 km/h',
+                data: dataDanger
+
+            }]
+        });
+    };
+</script>
+<script type="text/javascript">
+    function main(jsonFile) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                JsonData = JSON.parse(this.responseText);
+                dataSafe = $.map(JsonData.speedLess40, function (el) { return el; });
+                dataAcceptable = $.map(JsonData.speedFrom40To70, function (el) { return el; });
+                dataAlarm = $.map(JsonData.speedFrom70To100, function (el) { return el; });
+                dataDanger = $.map(JsonData.speedGreater100, function (el) { return el; });
+                totalTimeCheck = JsonData.totalTime;
+                safeTotalTime = dataSafe[0] + dataAcceptable[0] + dataAlarm[0] + dataDanger[0];
+                acceptableTotalTime = dataSafe[1] + dataAcceptable[1] + dataAlarm[1] + dataDanger[1];
+                alarmTotalTime = dataSafe[2] + dataAcceptable[2] + dataAlarm[2] + dataDanger[2];
+                dangerTotalTime = dataSafe[3] + dataAcceptable[3] + dataAlarm[3] + dataDanger[3];
+                kmTotal = JsonData.length;
+                leftTurns = JsonData.leftTurns;
+                rightTurns = JsonData.rightTurns;
+                brakes = JsonData.brakes;
+                accelerations = JsonData.accelerations;
+                $("#safeTotalTime").html(safeTotalTime + " s");
+                $("#acceptableTotalTime").html(acceptableTotalTime + " s");
+                $("#alarmTotalTime").html(alarmTotalTime + " s");
+                $("#dangerTotalTime").html(dangerTotalTime + " s");
+
+                $("#timeTotal").html(totalTimeCheck + " s");
+                $("#kmTotal").html(kmTotal + "");
+                $("#leftTurns").html(leftTurns + "");
+                $("#rightTurns").html(rightTurns + "");
+                $("#brakes").html(brakes + "");
+                $("#accelerations").html(accelerations + "");
+
+                drawCircleChart(totalTimeCheck, safeTotalTime, acceptableTotalTime, alarmTotalTime, dangerTotalTime);
+                drawColumChart();
+            }
+        };
+        xmlhttp.open("GET", jsonFile, true);
+        xmlhttp.send();
+    }
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Run default
+        var jsonF = "../../Data/output.json";
+        main(jsonF);
+        //
+        //Car selection
+        $('#taxiSelection').change(function () {
+            var selectedJsonFile = $("#taxiSelection option:selected").val();
+            main(selectedJsonFile);
+        });
+        //
+    });
+</script>

@@ -1,0 +1,1 @@
+{"totalTime":4000,"length":401.8,"leftTurns":23,"rightTurns":18,"brakes":524,"accelerations":645,"speedLess40":{"safe":189,"acceptable":100,"alarm":99,"danger":17},"speedFrom40To70":{"safe":622,"acceptable":17,"alarm":2,"danger":1},"speedFrom70To100":{"safe":897,"acceptable":9,"alarm":3,"danger":2},"speedGreater100":{"safe":0,"acceptable":0,"alarm":0,"danger":0}}
